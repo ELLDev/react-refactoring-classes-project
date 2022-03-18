@@ -3,9 +3,17 @@ import { FiCheckSquare } from "react-icons/fi";
 import { Form } from "./styles";
 import Modal from "../Modal";
 import Input from "../Input";
+import { InterfaceFood } from "../../types";
 
-const ModalEditFood = (props) => {
-  async function handleSubmit(data) {
+interface ModalEditFoodProps {
+  isOpen: boolean;
+  editingFood: InterfaceFood;
+  setIsOpen: () => void;
+  handleUpdateFood: (data: InterfaceFood) => void;
+}
+
+const ModalEditFood = (props: ModalEditFoodProps): JSX.Element => {
+  async function handleSubmit(data: InterfaceFood) {
     props.handleUpdateFood(data);
     props.setIsOpen();
   }

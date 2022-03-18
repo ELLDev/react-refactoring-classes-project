@@ -6,23 +6,31 @@ import Food from "../../components/Food";
 import ModalAddFood from "../../components/ModalAddFood";
 import ModalEditFood from "../../components/ModalEditFood";
 import { FoodsContainer } from "./styles";
+import { InterfaceFood } from "../../types";
 
-const Dashboard = () => {
-  const [foods, setFoods] = useState([]);
-  const [editingFood, setEditingFood] = useState({});
+const Dashboard = (): JSX.Element => {
+  const [foods, setFoods] = useState<InterfaceFood[]>([]);
+  const [editingFood, setEditingFood] = useState<InterfaceFood>({
+    id: 0,
+    name: "-",
+    description: "-",
+    price: 0,
+    available: false,
+    image: "-",
+  });
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
 
   useEffect(() => {
     async function loadFoods() {
-      const response = await api.get("/foods");
+      const response = await api.get<InterfaceFood[]>("/foods");
       setFoods(response.data);
     }
 
     loadFoods();
   }, []);
 
-  async function handleAddFood(food) {
+  async function handleAddFood(food: InterfaceFood) {
     try {
       const response = await api.post("/foods", {
         ...food,
@@ -35,9 +43,9 @@ const Dashboard = () => {
     }
   }
 
-  async function handleUpdateFood(food) {
+  async function handleUpdateFood(food: InterfaceFood) {
     try {
-      const foodUpdated = await api.put(`/foods/${editingFood.id}`, {
+      const foodUpdated = await api.put(`/foods/${editingFood?.id}`, {
         ...editingFood,
         ...food,
       });
@@ -52,7 +60,7 @@ const Dashboard = () => {
     }
   }
 
-  async function handleDeleteFood(id) {
+  async function handleDeleteFood(id: number) {
     await api.delete(`/foods/${id}`);
 
     const foodsFiltered = foods.filter((food) => food.id !== id);
@@ -68,7 +76,7 @@ const Dashboard = () => {
     setEditModalOpen(!editModalOpen);
   }
 
-  function handleEditFood(food) {
+  function handleEditFood(food: InterfaceFood) {
     setEditingFood(food);
     setEditModalOpen(true);
   }
